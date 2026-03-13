@@ -1,0 +1,4 @@
+interface:
+  display_name: "OpenNomos Task Ops"
+  short_description: "Coordinate OpenNomos task workflows"
+  default_prompt: "Use $opennomos-task-ops to discover, classify, execute, and validate OpenNomos project tasks."
