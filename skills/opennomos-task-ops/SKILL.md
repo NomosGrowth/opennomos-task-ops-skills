@@ -1,6 +1,6 @@
 ---
 name: opennomos-task-ops
-description: Coordinate OpenNomos project-task workflows end to end. Use when the user wants to discover live OpenNomos tasks, classify them into full-auto or human-in-the-loop buckets, generate content packages for social or proof tasks, execute browser flows, and validate completion through points and ledger data.
+description: Coordinate OpenNomos project-task workflows end to end. Use when the user wants to discover live OpenNomos tasks, classify them into full-auto or human-in-the-loop buckets, generate content packages for social or proof tasks, execute browser flows, and validate completion through event stream data.
 ---
 
 # OpenNomos Task Ops
@@ -8,7 +8,7 @@ description: Coordinate OpenNomos project-task workflows end to end. Use when th
 Use this skill to run OpenNomos tasks with a repeatable workflow instead of handling each project ad hoc.
 
 Always pair this skill with:
-- `opennomos-agent-mcp` for live project, task, points, and ledger data (https://github.com/NomosGrowth/opennomos-mcp-skills)
+- `opennomos-agent-mcp` for live project, task, and event stream data (https://github.com/NomosGrowth/opennomos-mcp-skills)
 - `actionbook` for browser automation on project sites
 
 ## Required Inputs
@@ -41,12 +41,10 @@ Credential resolution for this phase:
 - if it is missing, ask the user for the `nk_` key in chat
 
 Pull only what is needed:
-- `GET /api/v1/mcp/me/points`
 - `GET /api/v1/mcp/projects`
 - `GET /api/v1/mcp/explore/projects`
 - `GET /api/v1/mcp/projects/:project_id/tasks`
-- `GET /api/v1/mcp/me/projects/:project_id/points`
-- `GET /api/v1/mcp/me/projects/:project_id/ledger`
+- `GET /api/v1/mcp/projects/:project_id/event-stream`
 
 Treat `404` on `/tasks` as "project rule not found", not as a transport failure.
 
@@ -104,17 +102,19 @@ For `D` tasks:
 Do not treat clicks or submissions as success. Check the data.
 
 After each batch, re-check:
-- `me/points`
-- project-specific points when relevant
-- project ledger when relevant
+- project event stream when you need to know whether the task event was ingested
 
 Mark outcomes as:
-- `confirmed`: points or ledger changed
-- `pending`: action completed but no credit yet
-- `unclear`: evidence exists but no ledger confirmation
+- `recorded`: event-stream shows a matching event for the current user
+- `pending`: action completed but no matching event is visible yet
+- `unclear`: nearby events exist but there is no confident match for the task
 - `failed`: no evidence or clear rejection
 
 Keep "confirmed by API" separate from any inference.
+
+Validation rules:
+- Use `GET /api/v1/mcp/projects/:project_id/event-stream` to answer “did my task event enter OpenNomos?”
+- Stop the validation there unless the user explicitly asks about points or ledger
 
 ### 5. Maintain a Project Task Map
 
@@ -147,6 +147,7 @@ When validating:
 ## Guardrails
 
 - Do not fabricate task completion, engagement, invites, or SEO work
-- Do not assume a task counted unless points or ledger back it up
+- Do not assume a task event was recorded unless `/api/v1/mcp/projects/:project_id/event-stream` shows it
+- Do not require points or ledger changes to validate task execution
 - Do not use memory for current platform state when live API data is available
 - Stop and ask for help only at true human checkpoints

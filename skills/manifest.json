@@ -4,7 +4,7 @@
     {
       "name": "opennomos-task-ops",
       "path": "skills/opennomos-task-ops/SKILL.md",
-      "description": "Coordinate OpenNomos project-task workflows: discover live tasks, classify automation level, prepare content packages, run browser flows, and validate completion through points and ledger.",
+      "description": "Coordinate OpenNomos project-task workflows: discover live tasks, classify automation level, prepare content packages, run browser flows, and validate completion through event stream.",
       "required_scopes": [
         "api_key",
         "account_credentials"
@@ -13,12 +13,10 @@
         "opennomos-agent-mcp",
         "actionbook",
         "browser automation",
-        "GET /api/v1/mcp/me/points",
         "GET /api/v1/mcp/projects",
         "GET /api/v1/mcp/explore/projects",
         "GET /api/v1/mcp/projects/:project_id/tasks",
-        "GET /api/v1/mcp/me/projects/:project_id/points",
-        "GET /api/v1/mcp/me/projects/:project_id/ledger"
+        "GET /api/v1/mcp/projects/:project_id/event-stream"
       ]
     }
   ]

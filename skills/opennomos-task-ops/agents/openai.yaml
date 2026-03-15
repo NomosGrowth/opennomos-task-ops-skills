@@ -1,4 +1,4 @@
 interface:
   display_name: "OpenNomos Task Ops"
   short_description: "Coordinate OpenNomos task workflows"
-  default_prompt: "Use $opennomos-task-ops to discover, classify, execute, and validate OpenNomos project tasks."
+  default_prompt: "Use $opennomos-task-ops to discover, classify, execute, and validate OpenNomos project tasks. Use /api/v1/mcp/projects/:project_id/event-stream to check whether the current user's task event was recorded. Do not require points or ledger changes unless the user explicitly asks about them."

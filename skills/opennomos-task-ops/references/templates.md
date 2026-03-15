@@ -69,6 +69,9 @@ Submission text:
 Expected verification signal:
 ```
 
+Recommended values for `Expected verification signal`:
+- event-stream hit
+
 ## Project Task Map
 
 ```text
@@ -86,7 +89,6 @@ Tasks:
   notes:
 
 Known behaviors:
-- credit delay:
-- ledger pattern:
+- event-stream pattern:
 - failed attempts:
 ```
